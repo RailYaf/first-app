@@ -4,7 +4,7 @@ const Table = (props) => {
   const handleDeleteUser = (id) => {
     return props.deleteUser(id);
   };
-
+    
   return (
     <div>
       <table className="table">
