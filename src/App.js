@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Table from "./Table/Table";
 import User from "./Table/User";
-import Filter from "./Table/Filter"
+import Filter from "./Table/Filter";
 
 function App() {
   const data = [
@@ -18,7 +18,9 @@ function App() {
       email: "smirnov@mail.ru",
     },
   ];
-  const [word, setWord] = useState("")
+
+  // слово будет отслеживать любые изменения ввода в поле фильтра
+  const [word, setWord] = useState("");
   const [users, setUsers] = useState(data);
 
   /* const [directionSort, setdirectionSort] = useState(true); */
@@ -34,7 +36,6 @@ function App() {
     setUsers(users.filter((user) => user.id !== id));
   };
 
-
   const sortData = (sortedField) => {
     const copyData = users.concat();
 
@@ -47,10 +48,10 @@ function App() {
       }
       return 0;
     });
-    setUsers(sortData)
-  }
+    setUsers(sortData);
+  };
   // Функция для сортировки таблицы
- /*  const sortData = (field) => {
+  /*  const sortData = (field) => {
     const copyData = users.concat();
 
     let sortData;
@@ -68,23 +69,16 @@ function App() {
     setdirectionSort(!directionSort);
   }; */
 
-  // Фунцкия для поиска
- /*  const [searchTerm, setSearchTerm] = useState("");
-  const handleChange = (event) => {
-    setSearchTerm(event.target.value);
-  }; */
+  // фильтр отобразит обновленный список на основе поиска
+  // это состояние по умолчанию - это список людей 
+  const [filterDisplay, setFilterDisplay] = useState("");
 
-  const [filterDisplay, setFilterDisplay] = useState("")
-
+  // handleChange запускается каждый раз при изменении поля ввода
   const handleChange = e => {
     setWord(e);
-    let oldList = users.map (info => {
-      return {id: info.id, name: info.name.toLocaleLowerCase(), phone: info.phone, email: info.email};
-    });
     if (word !== "") {
       let newList = [];
-      newList = oldList.filter(info => info.name.includes(word.toLocaleLowerCase())
-      );
+      newList = users.filter(info => info.name.toLowerCase().includes(word))
       setFilterDisplay(newList);
       }
       else {
@@ -102,10 +96,14 @@ function App() {
           onChange={handleChange}
         />
       </div> */}
-      <Filter value={word} handleChange={e => handleChange(e.target.value)}/>
+      <Filter value={word} handleChange={(e) => handleChange(e.target.value)} />
       <div className="wrapper">
         <div>
-          <Table user={word.length < 1 ? users : filterDisplay} deleteUser={deleteUser} sortData={sortData} />
+          <Table
+            user={word.length < 1 ? users : filterDisplay}
+            deleteUser={deleteUser}
+            sortData={sortData}
+          />
         </div>
         <div>
           <User addUser={addUser} />
