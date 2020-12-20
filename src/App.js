@@ -19,11 +19,16 @@ function App() {
     },
   ];
 
+  /* useEffect(() => {
+    fetch("/api/users")
+      .then(response => response.json())
+      .then(users => setUsers(users));
+  }, []); */
+
   // слово будет отслеживать любые изменения ввода в поле фильтра
   const [word, setWord] = useState("");
   const [users, setUsers] = useState(data);
 
-  /* const [directionSort, setdirectionSort] = useState(true); */
 
   // Функция для добавления пользователя
   const addUser = (user) => {
@@ -50,30 +55,11 @@ function App() {
     });
     setUsers(sortData);
   };
-  // Функция для сортировки таблицы
-  /*  const sortData = (field) => {
-    const copyData = users.concat();
-
-    let sortData;
-
-    if (directionSort) {
-      sortData = copyData.sort((a, b) => {
-        return a[field] > b[field] ? 1 : -1;
-      });
-    }
-    sortData = copyData.reverse((a, b) => {
-      return a[field] > b[field] ? 1 : -1;
-    });
-
-    setUsers(sortData);
-    setdirectionSort(!directionSort);
-  }; */
 
   // фильтр отобразит обновленный список на основе поиска
   // это состояние по умолчанию - это список людей 
   const [filterDisplay, setFilterDisplay] = useState("");
 
-  // handleChange запускается каждый раз при изменении поля ввода
   const handleChange = e => {
     setWord(e);
     if (word !== "") {
