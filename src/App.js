@@ -1,39 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Table from "./Table/Table";
 import User from "./Table/User";
 import Filter from "./Table/Filter";
 
 function App() {
-  const data = [
-    {
-      id: 1,
-      name: "Иванов Иван Иванович",
-      phone: 89999999,
-      email: "ivanov@mail.ru",
-    },
-    {
-      id: 2,
-      name: "Смирнов Пётр Игоревич",
-      phone: 888888888,
-      email: "smirnov@mail.ru",
-    },
-  ];
-
-  /* useEffect(() => {
-    fetch("/api/users")
-      .then(response => response.json())
-      .then(users => setUsers(users));
-  }, []); */
-
-  // слово будет отслеживать любые изменения ввода в поле фильтра
+  const [users, setUsers] = useState([]);
   const [word, setWord] = useState("");
-  const [users, setUsers] = useState(data);
 
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = () => {
+    fetch("/api/users")
+      .then((response) => response.json())
+      .then((users) => setUsers(users));
+  };
 
   // Функция для добавления пользователя
   const addUser = (user) => {
     user.id = users.length + 1;
     setUsers([...users, user]);
+    fetch("/api/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: user.name,
+        phone: user.phone,
+        email: user.email,
+      }),
+    })
+      .then((response) => response.json())
+      .then((users) => fetchUsers());
   };
 
   // Функция для удаления пользователя
@@ -57,31 +55,24 @@ function App() {
   };
 
   // фильтр отобразит обновленный список на основе поиска
-  // это состояние по умолчанию - это список людей 
+  // это состояние по умолчанию - это список людей
   const [filterDisplay, setFilterDisplay] = useState("");
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     setWord(e);
     if (word !== "") {
       let newList = [];
-      newList = users.filter(info => info.name.toLowerCase().includes(word))
+      newList = users.filter((info) =>
+        info["name"].toLowerCase().includes(word)
+      );
       setFilterDisplay(newList);
-      }
-      else {
-        setFilterDisplay(users);
+    } else {
+      setFilterDisplay(users);
     }
-  }
+  };
 
   return (
     <div>
-      {/* <div>
-        <input
-          type="text"
-          placeholder="Search"
-          value={searchTerm}
-          onChange={handleChange}
-        />
-      </div> */}
       <Filter value={word} handleChange={(e) => handleChange(e.target.value)} />
       <div className="wrapper">
         <div>
