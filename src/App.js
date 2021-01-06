@@ -31,12 +31,17 @@ function App() {
       }),
     })
       .then((response) => response.json())
-      .then((users) => fetchUsers());
+      .then(() => fetchUsers());
   };
 
   // Функция для удаления пользователя
   const deleteUser = (id) => {
     setUsers(users.filter((user) => user.id !== id));
+    fetch("/api/users/" + id, {
+      method: "DELETE",
+    })
+      .then((response) => response.json())
+      .then(() => fetchUsers());
   };
 
   const sortData = (sortedField) => {
